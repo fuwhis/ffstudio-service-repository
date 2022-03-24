@@ -11,3 +11,10 @@ This repository is the web API service that is used for auto detailing studio on
 
 ### BASE USAGE
 -----
+
+### Dependencies
+
+| Package | License |
+| --- | --- |
+| EntityFrameworkCore | Microsoft |
+| Npgsql | PostgreSQL License | 
