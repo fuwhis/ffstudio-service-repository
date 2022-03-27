@@ -14,7 +14,13 @@ This repository is the web API service that is used for auto detailing studio on
 
 ### Dependencies
 
-| Package | License |
+| NuGet Packages | License |
 | --- | --- |
-| EntityFrameworkCore | Microsoft |
-| Npgsql | PostgreSQL License | 
+| EntityFrameworkCore.InMemory | MIT |
+| Swashbuckle.AspNetCore | MIT |
+| Npgsql | PostgreSQL License |
+| Npgsql.EntityFrameworkCore.PostgreSQL | PostgreSQL License |
+| AspDotNetCore.Authentication.JWTwtBearer | MIT |
+| AspDotNetCore.MVC.NewtonSoftJson | MIT |
+| EntityFrameworkCore.Tools | MIT |
+| NewtonSoft.Json | MIT |
