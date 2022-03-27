@@ -5,15 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FFStudioServices.Models
 {
+    [Table("accounts")]
     public class Account: BaseEntity
     {
         [Key]
-        public string UserId { get; set; }
         [Required]
-        public string Username { get; set; }
+        public string UserId { get; set; } = string.Empty;
         [Required]
-        public string Password { get; set; }
+        public string Username { get; set; } = string.Empty;
+        [Required]
+        public string Password { get; set; } = string.Empty;
+
+        public string? Name { get; set; }
+
         [Column(TypeName = "json")]
-        public string info { get; set; }
+        public string? Info { get; set; }
     }
 }
