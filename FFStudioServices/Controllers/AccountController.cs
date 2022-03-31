@@ -5,8 +5,8 @@ using System.Data;
 
 namespace FFStudioServices.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration _configuration;
