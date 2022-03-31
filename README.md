@@ -3,7 +3,6 @@
 The web API service that is used for management at Flex Fresh Studio store on the client admin website build in JavaScript.
 
 # DESIGN PATTERN
-You can see the differences between not using repositories (directly using the EF DbContext) versus using repositories, which makes it easier to mock those repositories.
 ![You can see the differences between not using repositories (directly using the EF DbContext) versus using repositories, which makes it easier to mock those repositories.](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/media/infrastructure-persistence-layer-implementation-entity-framework-core/custom-repo-versus-db-context.png)
 -----
 
