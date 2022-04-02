@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 
 using FFStudioServices.Context;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,11 @@ builder.Services.AddControllers()
     });
 
 // Register The Database Context Services.
-builder.Services.AddDbContext<FFStudioServicesContext>(opt => opt.UseInMemoryDatabase("2fStudioDB"));
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<PostgreContext>(opt => opt
+    .UseInMemoryDatabase("2fStudioDB")
+    //.UseNpgsql(Configuration.GetConnectionString("2fStudioDB"))
+
+);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
