@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace FFStudioServices.Repositories
 {
-    public class GenericRepository<T>: IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class, new()
     {
         protected PostgreContext _context;
         internal DbSet<T> dbSet;
@@ -18,34 +18,42 @@ namespace FFStudioServices.Repositories
 
         }
 
-        public virtual Task<IEnumerable<T>> GetAll()
+        public async Task<T> GetById(string id) => await _context.Set<T>().FindAsync(id);
+
+        public async Task<T> Find(Expression<Func<T, bool>> predicate) => await _context.Set<T>().FirstOrDefaultAsync(predicate);
+
+        public async Task<IEnumerable<T>> GetAll() => await _context.Set<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate) => await _context.Set<T>().Where(predicate).ToListAsync();
+
+        public void Add(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Add(entity);
         }
 
-        public virtual async Task<T> GetById(object id)
+        public void AddRange(IEnumerable<T> entities)
         {
-            return await dbSet.FindAsync(id);
+            _context.Set<T>().AddRange(entities);
         }
 
-        public Task<bool> Add(T entity)
+        public void Delete(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Remove(entity);
         }
 
-        public Task<bool> Delete(object id)
+        public void DeleteRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().RemoveRange(entities);
         }
 
-        public Task<bool> Upsert(T entity)
+        public void Update(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Update(entity);
         }
 
-        public Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+        public void UpdateRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().UpdateRange(entities);
         }
     }
 }

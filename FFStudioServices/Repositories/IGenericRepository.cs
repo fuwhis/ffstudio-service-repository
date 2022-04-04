@@ -7,11 +7,20 @@ namespace FFStudioServices.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {
+        Task<T> GetById(string id);
+        Task<T> Find(Expression<Func<T, bool>> predicate);
+
         Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(object id);
-        Task<bool> Add(T entity);
-        Task<bool> Delete(object id);
-        Task<bool> Upsert(T entity);
-        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate);
+
+        void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
+
+        void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entities);
+
+        void Update(T entity);
+        void UpdateRange(IEnumerable<T> entities);
+
     }
 }
