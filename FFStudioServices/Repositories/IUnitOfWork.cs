@@ -2,7 +2,7 @@
 {
     public interface IUnitOfWork 
     {
-        //IGenericRepository<T> GetRepository<T>() where T : class;
+        //Register repositories
 
         void Save(); 
     }
