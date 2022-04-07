@@ -3,14 +3,15 @@ using FFStudioServices.Models;
 
 namespace FFStudioServices.Context
 {
-    public class PostgreContext: DbContext
+    public partial class PostgreContext: DbContext
     {
+        public PostgreContext() { }
+        
         public PostgreContext(DbContextOptions<PostgreContext> options) : base(options)
         {
         }
 
-
-        public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
