@@ -11,7 +11,7 @@ namespace FFStudioServices.Context
         {
         }
 
-        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Account>? Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
