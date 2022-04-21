@@ -1,9 +1,9 @@
 ﻿using System;
-using FFStudioServices.Models.BaseModels;
+using EntityModel.Models.BaseModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FFStudioServices.Models
+namespace EntityModel.Models
 {
     [Table("accounts")]
     public class Account: BaseEntity

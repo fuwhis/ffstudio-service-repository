@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FFStudioServices.Models
+namespace EntityModel.Models
 {
     [Table("bills")]
     public class Bill

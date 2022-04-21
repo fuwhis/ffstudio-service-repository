@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace FFStudioServices.Repositories
+namespace Repository.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {
