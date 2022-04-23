@@ -1,21 +1,29 @@
-﻿using FFStudioServices.Context;
+﻿using EntityModel.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace FFStudioServices.Repositories
+namespace Repository.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class, new()
+    public class GenericRepository<T> : IGenericRepository<T>, IDisposable where T : class
     {
         protected PostgreContext _context;
         internal DbSet<T> dbSet;
-        protected readonly ILogger _logger;
+        //protected readonly ILogger _logger;
+        private bool _isDisposed;
 
-        public GenericRepository(PostgreContext context, ILogger logger)
+        public GenericRepository(PostgreContext context)
         {
             this._context = context;
             this.dbSet = context.Set<T>();
-            this._logger = logger;
+        }
 
+        public void Dispose()
+        {
+            if(this._context != null)
+            {
+                this._context.Dispose();
+            }
+            _isDisposed = true;
         }
 
         public async Task<T> GetById(string id) => await _context.Set<T>().FindAsync(id);
@@ -55,5 +63,6 @@ namespace FFStudioServices.Repositories
         {
             _context.Set<T>().UpdateRange(entities);
         }
+
     }
 }

@@ -1,8 +1,8 @@
-﻿using FFStudioServices.Models.BaseModels;
+﻿using EntityModel.Models.BaseModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FFStudioServices.Models
+namespace EntityModel.Models
 {
     [Table("products")]
     public class Product : BaseEntity

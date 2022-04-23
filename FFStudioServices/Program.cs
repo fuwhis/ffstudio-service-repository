@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 
-using FFStudioServices.Context;
+using EntityModel.Context;
 using System.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +21,9 @@ builder.Services.AddControllers()
     });
 
 // Register The Database Context Services.
-builder.Services.AddEntityFrameworkNpgsql().AddDbContext<PostgreContext>(opt => opt
-    .UseInMemoryDatabase("2fStudioDB")
-    //.UseNpgsql(Configuration.GetConnectionString("2fStudioDB"))
+builder.Services.AddDbContext<PostgreContext>(opt => opt
+    //.UseInMemoryDatabase("2fStudioDB")
+    .UseNpgsql(builder.Configuration.GetConnectionString("2fStudioDB"))
 
 );
 
@@ -36,6 +39,23 @@ builder.Services.AddCors(c =>
     c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+// apply Authentication Jwt with Bearer
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+
+// Declare A Builder
 var app = builder.Build();
 // Enable CORs
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -51,6 +71,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

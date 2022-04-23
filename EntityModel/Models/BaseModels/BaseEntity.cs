@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FFStudioServices.Models.BaseModels
+namespace EntityModel.Models.BaseModels
 {
     public class BaseEntity
     {

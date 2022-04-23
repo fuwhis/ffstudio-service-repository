@@ -16,7 +16,7 @@ namespace FFStudioServices.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public JsonResult Get()
         {
             //string query = @"
