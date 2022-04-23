@@ -21,10 +21,10 @@ namespace EntityModel.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql("Server=ec2-35-175-68-90.compute-1.amazonaws.com;Port=5432;User Id=euwqddsguikpvp;Password=e4f3062701c5a0185c59b6b863a72e8bd123426bd287520423867bcbc4d605cd;Database=db3ej2esqbuvic;");
-            }
+            //if(!optionsBuilder.IsConfigured)
+            //{
+            //    optionsBuilder.UseNpgsql("");
+            //}
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
