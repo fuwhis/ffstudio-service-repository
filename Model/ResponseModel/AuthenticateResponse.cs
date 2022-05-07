@@ -12,18 +12,28 @@ namespace Model.ResponseModel
     public class AuthenticateResponse
     {
         public string Id { get; set; }
-        public string? Name { get; set; }
-
-        //[Column(TypeName = "json")]
-        public string? Info { get; set; }
+        public string UserName { get; set; }
         public string Token { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string? Name { get; set; }
+        public string? Info { get; set; }
+        public string? Passhash { get; set; }
 
         public AuthenticateResponse(Account account, string token)
         {
             Id = account.UserId;
-            Name = account.Name; 
-            Info = account.Info;
+            UserName = account.Username;
             Token = token;
+            Name = account.Name;
+            Info = account.Info;
+            CreatedDate = account.Created_Date;
+            UpdatedDate = account.Updated_Date;
+            Passhash = account.Passhash;
+        }
+
+        public AuthenticateResponse()
+        {
         }
     }
 }
