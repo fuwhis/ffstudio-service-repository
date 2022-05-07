@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.BusinessService
+namespace Service.BusinessService.AccountService
 {
     public interface IAccountService
     {
