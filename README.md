@@ -1,7 +1,7 @@
 # Flex Fresh Studio - WebAPIServices
+Fresh Flex Studio is a take care, remain service that intends on motorbikes, motorbikes,...
 
 The web API service that is used for management at Flex Fresh Studio store on the client admin website build in JavaScript.
-
 -----
 # DESIGN PATTERN
 In this Figure, you can see and we are using the Generic Repository on Unit-of-Work pattern. 
@@ -18,7 +18,7 @@ In this Figure, you can see and we are using the Generic Repository on Unit-of-W
 1. Visual Studio 2022
 2. [.NET 6.0](https://docs.microsoft.com/en-us/dotnet/core/whats-new/dotnet-6) or later
 3. [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
-3. PostgreSql
+3. PostgreSql (PgAdmin 4)
 
 ### BASE USAGE
 
@@ -35,3 +35,5 @@ In this Figure, you can see and we are using the Generic Repository on Unit-of-W
 | AspDotNetCore.MVC.NewtonSoftJson | MIT |
 | EntityFrameworkCore.Tools | MIT |
 | NewtonSoft.Json | MIT |
+| AutoMapper | MIT |
+| Microsoft.AspNetCore.Authentication.JwtBearer	| MIT |
