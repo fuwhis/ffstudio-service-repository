@@ -5,8 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EntityModel.Models
 {
     [Table("discounts")]
-    public class Discount: BaseEntity
+    public partial class Discount: BaseEntity
     {
+        public Discount()
+        {
+            Bills = new HashSet<Bill>();
+        }
         [Key]
         [Required]
         public string Uid { get; set; } = string.Empty;
@@ -16,9 +20,15 @@ namespace EntityModel.Models
 
         [Required]
         [Range(0, 100)]
-        public int Discount_Value { get; set; }
+        public int Discount_Num { get; set; }
 
         [Column(TypeName = "json")]
         public string? Info { get; set; }
+
+        public DateTime Expired_Date { get; set; }
+
+
+        public virtual ICollection<Bill> Bills { get; set; }
+
     }
 }

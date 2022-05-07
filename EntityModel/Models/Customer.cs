@@ -5,8 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EntityModel.Models
 {
     [Table("customers")]
-    public class Customer: BaseEntity
+    public partial class Customer: BaseEntity
     {
+        public Customer()
+        {
+            Bills = new HashSet<Bill>();
+        }
         [Key]
         [Required]
         public string Uid { get; set; } = string.Empty;
@@ -28,5 +32,7 @@ namespace EntityModel.Models
 
         [Column(TypeName = "json")]
         public string? Info { get; set; }
+
+        public virtual ICollection<Bill> Bills { get; set; }
     }
 }
