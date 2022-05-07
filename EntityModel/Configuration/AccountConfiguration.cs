@@ -15,7 +15,11 @@ namespace EntityModel.Configuration
         {
             builder.HasKey(e => e.UserId)
                 .HasName("user_key");
-
+            builder.Property(e => e.UserId).IsRequired();
+            builder.Property(e => e.Username).IsRequired();
+            builder.Property(e => e.Password).IsRequired();
+            builder.Property(e => e.Name);
+            builder.Property(e => e.Info);
 
         }
     }

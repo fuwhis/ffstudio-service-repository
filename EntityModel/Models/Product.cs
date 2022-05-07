@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EntityModel.Models
 {
     [Table("products")]
-    public class Product : BaseEntity
+    public partial class Product : BaseEntity
     {
         [Key]
         [Required]
@@ -26,5 +26,8 @@ namespace EntityModel.Models
 
         [Column(TypeName = "json")]
         public string? Info { get; set; }
+        public string Created_By { get; set; }
+
+        public virtual Account Created_By_Navigation { get; set; }
     }
 }

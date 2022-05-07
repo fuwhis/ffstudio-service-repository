@@ -1,69 +1,84 @@
-﻿using EntityModel.Context;
+﻿using AutoMapper;
+using EntityModel.Context;
 using EntityModel.Models;
+using FFStudioServices.Authorization;
+using FFStudioServices.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Model.RequestModel;
+using Service.BusinessService.UserService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace FFStudioServices.Controllers
 {
-    [Route("api/token")]
+    [Route("api/v1/authen")]
     [ApiController]
     public class AuthenTokenController : ControllerBase
     {
-        public IConfiguration _configuration;
-        private readonly PostgreContext _context;
-
-        public AuthenTokenController(IConfiguration config, PostgreContext context)
+        private IUserService _userService;
+        private IMapper _mapper;
+        private readonly AppSettings _appSettings;
+        public AuthenTokenController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            _configuration = config;
-            _context = context;
+            _userService = userService;
+            _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Post(Account _accountData)
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(AuthenticateRequest model)
         {
-            if (_accountData != null && _accountData.Username != null & _accountData.Password != null)
-            {
-                var user = await GetUser(_accountData.Username, _accountData.Password);
-                {
-                    if (user != null)
-                    {
-                        var claims = new[]
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt: Subject"]),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                            new Claim("UserId", user.UserId),
-                            new Claim("Username", user.Username)
-                        };
+            var response = _userService.Authenticate(model);
+            return Ok(response);
+        }
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                        var token = new JwtSecurityToken(
-                            _configuration["Jwt:Issuer"],
-                            _configuration["Jwt:Audience"],
-                            claims,
-                            expires: DateTime.UtcNow.AddMinutes(10),
-                            signingCredentials: signIn
-                            );
-                        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-                    }
-                    else
-                    {
-                        return BadRequest("Invalid credentials");
-                    };
-                };
+        [AllowAnonymous]
+        [HttpGet("users")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var users = _userService.GetAll();
+                return Ok(users);
             }
-            else
+            catch(Exception e)
             {
-                return BadRequest();
-            };
+                return BadRequest(e.Message);
+            }
         }
 
-        private async Task<Account> GetUser(string? username, string? password)
-            => await _context.Accounts.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+        //[HttpGet("user/get/{id}")]
+        //public IActionResult GetById(string id)
+        //{
+        //    var user = _userService.GetById(id);
+        //    return Ok(user);
+        //}
+
+        //[AllowAnonymous]
+        //[HttpPost("register")]
+        //public IActionResult Register(RegisterRequest model)
+        //{
+        //    _userService.Register(model);
+        //    return Ok(new { message = "Registration successful" });
+        //}
+
+        //[HttpPut("user/update/{id}")]
+        //public IActionResult Update(string id, UpdateRequest model)
+        //{
+        //    _userService.Update(id, model);
+        //    return Ok(new { message = "User updated successfully" });
+        //}
+
+        //[HttpDelete("user/remove/{id}")]
+        //public IActionResult Delete(string id)
+        //{
+        //    _userService.Delete(id);
+        //    return Ok(new { message = "User deleted successfully" });
+        //}
     }
 }

@@ -6,62 +6,64 @@ using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FFStudioServices.Helpers;
+using Service.BusinessService.UserService;
+using FFStudioServices.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+{
+    // Add services to the container.
+    var services = builder.Services;
+    // Configuration Postgresql Services.
+    services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+        .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-// Add services to the container.
-// Configuration Postgresql Services.
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
-    .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
-
-builder.Services.AddControllers()
+    services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
         //options.SuppressMapClientErrors = true;
     });
 
-// Register The Database Context Services.
-builder.Services.AddDbContext<PostgreContext>(opt => opt
-    //.UseInMemoryDatabase("2fStudioDB")
-    .UseNpgsql(builder.Configuration.GetConnectionString("2fStudioDB"))
+    // Register The Database Context Services.
+    services.AddDbContext<PostgreContext>(opt => opt
+        //.UseInMemoryDatabase("2fStudioDB")
+        .UseNpgsql(builder.Configuration.GetConnectionString("2fStudioDB"))
+    );
 
-);
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-//builder.Services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("ToDoList"));
-
-
-// Add services CORs
-builder.Services.AddCors(c =>
-{
-    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-});
-
-// apply Authentication Jwt with Bearer
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
+    // Add services CORs
+    services.AddCors(c =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+        c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    });
 
+    // configure strongly typed settings object
+    services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+    // configure DI for application services
+    services.AddScoped<IUserService, UserService>();
+
+    // configure automapper with all automapper profiles from this assembly
+    services.AddAutoMapper(typeof(Program));
+
+    // configure DI for application services
+    services.AddScoped<IJwtUtils, JwtUtils>();
+    services.AddScoped<IUserService, UserService>();
+}
 
 // Declare A Builder
 var app = builder.Build();
 // Enable CORs
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors(options => options
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
@@ -69,11 +71,19 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoApi v1"));
 }
 
+// custom jwt auth middleware
+app.UseMiddleware<JwtMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// global error handler
+app.UseMiddleware<ErrorHandlerMiddleware>();
+// custom jwt auth middleware
+app.UseMiddleware<JwtMiddleware>();
 
 app.Run();

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EntityModel.Models
 {
     [Table("bills")]
-    public class Bill
+    public partial class Bill
     {
         [Key]
         [Required]
@@ -25,5 +25,9 @@ namespace EntityModel.Models
 
         [Column(TypeName = "json")]
         public string? Info { get; set; }
+
+        public virtual Customer Customer { get; set; }
+        public virtual Discount Discount { get; set; }
+        public virtual Account User { get; set; }
     }
 }

@@ -10,13 +10,13 @@ namespace FFStudioServices.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-
+        
         public AccountController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("users")]
         public JsonResult Get()
         {
             //string query = @"
@@ -44,5 +44,8 @@ namespace FFStudioServices.Controllers
             Console.Write(table);
             return new JsonResult(table);
         }
+
+
+
     }
 }
